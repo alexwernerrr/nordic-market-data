@@ -1,0 +1,20 @@
+[project]
+name = "nordic-data"
+version = "0.1.0"
+description = "Daily pipeline for Swedish rates and equity market data"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas",
+    "requests",
+    "yfinance",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

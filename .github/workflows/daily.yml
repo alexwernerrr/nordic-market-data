@@ -1,0 +1,30 @@
+name: Daily update
+
+on:
+  # Turn on the schedule once the pipeline works:
+  # schedule:
+  #   - cron: "0 18 * * 1-5"  # 18:00 UTC on weekdays, after Nasdaq Stockholm closes
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: pytest
+      - run: python -m nordic_data
+      - name: Commit new data
+        run: |
+          # Commit as yourself so the commits count on your contribution graph
+          git config user.name "Alexander Werner"
+          git config user.email "302153027+alexwernerrr@users.noreply.github.com"
+          git add data README.md
+          git diff --cached --quiet || git commit -m "Daily data update $(date -u +%F)"
+          git push
